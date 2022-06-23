@@ -1,8 +1,9 @@
 {
 	"name": "autumn",
+	"productName": "autumn",
 	"version": "0.0.1",
-	"description": "A Code Editor Inspired By Atom",
-	"main": "electron/index.js",
+	"description": "A Code Editor",
+	"main": "./electron/index.js",
 	"scripts": {
 		"dev": "rollup -c -w",
 		"start": "electron-forge start",
@@ -10,19 +11,19 @@
 		"build": "rollup -c && electron-forge make",
 		"publish": "electron-forge publish"
 	},
+	"config": {
+		"forge": "./forge.config.js"
+	},
 	"keywords": [],
 	"author": {
 		"name": "Aditya Mishra",
 		"email": "75035219+DEVLOPRR@users.noreply.github.com"
 	},
 	"license": "MIT",
-	"dependencies": {
-		"electron-squirrel-startup": "^1.0.0"
-	},
 	"devDependencies": {
-		"@electron-forge/cli": "^6.0.0-beta.64",
-		"@electron-forge/maker-squirrel": "^6.0.0-beta.64",
-		"@electron-forge/maker-zip": "^6.0.0-beta.64",
+		"@electron-forge/cli": "^6.0.0-beta.55",
+		"@electron-forge/maker-squirrel": "^6.0.0-beta.55",
+		"@electron-forge/maker-zip": "^6.0.0-beta.55",
 		"@rollup/plugin-commonjs": "^22.0.0",
 		"@rollup/plugin-node-resolve": "^13.3.0",
 		"codemirror": "^5.65.6",
