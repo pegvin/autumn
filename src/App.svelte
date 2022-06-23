@@ -10,12 +10,12 @@
 	let OpenedFiles = [];
 
 	function onTabChange(currIndex) {
-		if (CurrentTab == currIndex) return;
+		if (CurrentTab == currIndex) return; // this event is fired even when user clicks on the already selected tab, to prevent code running twice for no reason we use this if condition.
 
 		PreviousTab = CurrentTab;
 		CurrentTab = currIndex;
+		// console.log("Prev: " + PreviousTab, "\nCurr: " + CurrentTab);
 
-		console.log("Prev: " + PreviousTab, "\nCurr: " + CurrentTab);
 		OpenedFiles[PreviousTab].contents = CodeEditor.getValue();
 		CodeEditor.setValue(OpenedFiles[CurrentTab].contents);
 	}
@@ -26,17 +26,18 @@
 		SetEditorFont(CodeEditor, eApi.config.Editor.FontFamily, 18);
 
 		document.addEventListener("OpenNewFileEvt", (e) => {
+			for (let i = 0; i < OpenedFiles.length; i++) {
+				if (OpenedFiles[i].fullPath === e.detail.fullPath) {
+					return;
+				}
+			}
 			var FileContents = eApi.fs.readFile(e.detail.fullPath);
 			if (!FileContents) return;
-
-			if (OpenedFiles.length > 0) {
-				OpenedFiles[PreviousTab].contents = CodeEditor.getValue();
-			}
 
 			OpenedFiles.push({});
 			Object.assign(OpenedFiles[OpenedFiles.length - 1], e.detail);
 			OpenedFiles[OpenedFiles.length - 1].contents = FileContents;
-			if (OpenedFiles[CurrentTab] != undefined && OpenedFiles.length == 1) {
+			if (OpenedFiles.length === 1) {
 				CodeEditor.setValue(FileContents);
 			}
 		})

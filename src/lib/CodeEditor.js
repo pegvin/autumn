@@ -1,5 +1,15 @@
 import CodeMirror from "codemirror";
-import "codemirror/mode/javascript/javascript.js";
+import "codemirror/mode/javascript/javascript.js"; // JavaScript
+import "codemirror/mode/coffeescript/coffeescript"; // CoffeeScript
+import "codemirror/mode/css/css"; // CSS
+import "codemirror/mode/yaml/yaml"; // Yaml
+import "codemirror/mode/go/go"; // GoLang
+import "codemirror/mode/lua/lua"; // Lua
+import "codemirror/mode/markdown/markdown"; // Markdown
+import "codemirror/mode/python/python"; // Python
+import "codemirror/mode/rust/rust"; // Rust
+import "codemirror/mode/clike/clike"; // C, C++, C-Objective
+import "codemirror/mode/dart/dart"; // Dart
 import "../../node_modules/codemirror/lib/codemirror.css";
 import "../../node_modules/codemirror/theme/base16-dark.css";
 import "../../node_modules/codemirror/theme/base16-light.css";
