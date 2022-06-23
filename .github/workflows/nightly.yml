@@ -1,0 +1,85 @@
+name: Continous Release Action
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  Build-Linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout v3
+      uses: actions/checkout@v3
+
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        #cache: 'npm'
+
+    - name: Install Deps
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux_zip
+        path: out/make/zip/linux/x64/*.zip
+        if-no-files-found: error
+
+  Build-Windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout v3
+      uses: actions/checkout@v3
+
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        #cache: 'npm'
+
+    - name: Install Deps
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows_zip
+        path: out/make/zip/win32/x64/*.zip
+        if-no-files-found: error
+
+  Create-Release:
+    needs: [Build-Windows, Build-Linux]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout v3
+      uses: actions/checkout@v3
+
+    - name: Download Linux Zip
+      uses: actions/download-artifact@v2
+      with:
+        name: linux_zip
+        path: ./Autumn-linux-x64.zip
+
+    - name: Download Windows Zip
+      uses: actions/download-artifact@v2
+      with:
+        name: windows_zip
+        path: ./Autumn-win32-x64.zip
+
+    - name: Update/Create Continous Release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "nightly"
+        prerelease: false
+        title: "Autumn Nightly"
+        files: |
+          ./Autumn-linux-x64.zip
+          ./Autumn-win32-x64.zip
