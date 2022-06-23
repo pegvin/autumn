@@ -7,7 +7,8 @@ const AutumnConfig = require('../autmun.config.js');
 var File = {
 	fileName: "",
 	fullPath: "",
-	contents: ""
+	contents: "",
+	isSaved: false
 };
 
 var OpenNewFileEvt = new CustomEvent('OpenNewFileEvt', {

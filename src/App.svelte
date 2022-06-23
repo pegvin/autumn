@@ -1,13 +1,38 @@
 <script>
+	import Mousetrap from "mousetrap";
 	import Tabs from "./components/Tabs.svelte";
 	import { onMount } from "svelte";
 	import { CreateEditor, SetEditorFont } from "./lib/CodeEditor.js";
+import Welcome from "./components/Welcome.svelte";
 
 	var CodeEditor;
 
 	let CurrentTab = 0;
 	let PreviousTab = 0;
 	let OpenedFiles = [];
+
+	async function CloseFile() {
+		if (OpenedFiles.length <= 0) return;
+		if (OpenedFiles.length === 1) {
+			OpenedFiles = [];
+			CurrentTab = 0;
+			PreviousTab = 0;
+			CodeEditor.setValue("");
+		} else {
+			OpenedFiles.splice(CurrentTab, 1);
+			CurrentTab = OpenedFiles.length - 1; // Change The Current Tab To The Last Tab.
+			CodeEditor.setValue(OpenedFiles[CurrentTab].contents);
+		}
+	}
+
+	async function SaveFile() {
+		let fileObj = OpenedFiles[CurrentTab];
+		if (!fileObj) return;
+
+		OpenedFiles[CurrentTab].contents = CodeEditor.getValue();
+		eApi.fs.writeFile(fileObj.fullPath, fileObj.contents);
+		OpenedFiles[CurrentTab].isSaved = true;
+	}
 
 	function onTabChange(currIndex) {
 		if (CurrentTab == currIndex) return; // this event is fired even when user clicks on the already selected tab, to prevent code running twice for no reason we use this if condition.
@@ -21,8 +46,20 @@
 	}
 
 	onMount(async () => {
-		console.log("Mounted...");
-		CodeEditor = CreateEditor("CodeEditorArea", eApi.system.isDark ? "base16-dark" : "base16-light", 4, "javascript");
+		console.log("App Mounted...");
+		Mousetrap.bind(['ctrl+s', 'command+s'], SaveFile);
+		Mousetrap.bind(['ctrl+w', 'command+w'], CloseFile);
+
+		CodeEditor = CreateEditor(
+			"CodeEditorArea", eApi.system.isDark ? "base16-dark" : "base16-light",
+			4, "javascript", SaveFile, CloseFile
+		);
+
+		CodeEditor.on("change", () => {
+			if (OpenedFiles.length > 0) {
+				OpenedFiles[CurrentTab].isSaved = false;
+			}
+		})
 		SetEditorFont(CodeEditor, eApi.config.Editor.FontFamily, 18);
 
 		document.addEventListener("OpenNewFileEvt", (e) => {
@@ -45,12 +82,9 @@
 </script>
 
 <div id="CodeSpace">
-	<div style="z-index: {OpenedFiles.length > 0 ? -999 : 999};" id="CodeEditorWelcome">
-		<div class="text">
-			<h1>Autumn</h1>
-			<p>A Code Editor Inspired By Atom</p>
-		</div>
-	</div>
+	{#if OpenedFiles.length <= 0}
+		<Welcome />
+	{/if}
 	<Tabs items={OpenedFiles} activeTabIndex={CurrentTab} onChange={onTabChange} />
 	<div id="CodeEditorArea"></div>
 </div>
@@ -58,26 +92,12 @@
 <style>
 	#CodeSpace {
 		position: relative;
-		color: #fff;
-		background-color: #222;
+		color: var(--fg);
+		background-color: var(--bg);
 		--CodeEditorTabHeight: 30px;
 		display: block;
 		height: 100%;
 		width: 100%;
-	}
-
-	#CodeEditorWelcome {
-		background-color: #222;
-		position: absolute;
-		top: 0; left: 0;
-		width: 100%; height: 100%;
-	}
-
-	#CodeEditorWelcome div.text {
-		z-index: 10;
-		position: absolute;
-		bottom: 80px;
-		right: 60px;
 	}
 
 	#CodeEditorArea {

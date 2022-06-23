@@ -15,3 +15,23 @@ body {
 	height: 100vh;
 	font-family: "Open Sans", sans-serif;
 }
+
+body.base16-dark {
+	--fg: #E7E7E7;
+	--fg1: #CCC;
+	--fg2: #A9A9A9;
+
+	--bg: #20201f;
+	--bg1: #464542;
+	--bg2: #75746d;
+}
+
+body.base16-light {
+	--fg: #20201f;
+	--fg1: #464542;
+	--fg2: #75746d;
+
+	--bg: #E7E7E7;
+	--bg1: #CCC;
+	--bg2: #A9A9A9;
+}

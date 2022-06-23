@@ -22,7 +22,12 @@ import "../../node_modules/codemirror/theme/base16-light.css";
  * @param {String} mode Editor Mode
  * @returns 
  */
-export function CreateEditor(id, theme = "base16-dark", tabSize = 4, mode = "javascript") {
+export function CreateEditor(
+	id, theme = "base16-dark",
+	tabSize = 4, mode = "javascript",
+	SaveReqCb = function() { console.log("Save Requested..."); },
+	FileCloseReqCb = function() { console.log("File Close Requested..."); }
+) {
 	const element = document.getElementById(id);
 	var CodeEditor = CodeMirror(element, {
 		lineNumbers: true,
@@ -32,8 +37,13 @@ export function CreateEditor(id, theme = "base16-dark", tabSize = 4, mode = "jav
 		indentWithTabs: true,
 		value: "// Start Coding...",
 		mode: mode,
-		autofocus: true
+		autofocus: true,
+		extraKeys: {
+			"Ctrl-S": SaveReqCb,
+			"Ctrl-W": FileCloseReqCb
+		}
 	})
+
 	CodeEditor?.setSize("100%", "100%");
 	document.body.className = theme;
 
@@ -73,4 +83,15 @@ export async function SetEditorFont(editor, fontFamily = "monospace", fontSize =
 	});
 
 	editor?.refresh();
+}
+
+/**
+ * Change CodeMirror's Mode
+ * @param {Object} editor CodeMirror Instance
+ * @param {String} mode CodeMirror Mode String
+ * @returns {null}
+ */
+export function SetEditorMode(editor, mode) {
+	if (!editor || !mode) return;
+	editor.setOption("mode", mode);
 }

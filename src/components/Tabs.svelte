@@ -16,7 +16,7 @@
 
 <ul>
 {#each items as item, index}
-	<li class={index === activeTabIndex ? 'active' : ''}>
+	<li class={`${item.isSaved == true ? '' : 'italic'}${index == activeTabIndex ? ' active' : ''}`}>
 		<span on:click={handleClick(index)}>{item.fileName}</span>
 	</li>
 {/each}
@@ -25,7 +25,7 @@
 <style>
 	ul {
 		height: var(--CodeEditorTabHeight);
-		background-color: #333;
+		background-color: var(--bg);
 		display: flex;
 		flex-wrap: wrap;
 		padding-left: 0;
@@ -34,7 +34,13 @@
 	}
 
 	li {
+		font-style: normal;
+		position: relative;
 		margin-bottom: -1px;
+	}
+
+	li.italic {
+		font-style: italic;
 	}
 
 	span {
@@ -44,16 +50,17 @@
 		display: block;
 		padding: 0.35rem 1rem;
 		cursor: pointer;
-		color: #fff;
-		background-color: #444;
+		color: var(--fg);
+		background-color: var(--bg);
+		transition: color 0.1s linear;
 	}
 
 	span:hover {
-		border-color: #777;
+		border-color: var(--bg2);
 	}
 
 	li.active > span {
-		background-color: #555;
-		border-color: #777;
+		background-color: var(--bg1);
+		border-color: var(--bg2);
 	}
 </style>
