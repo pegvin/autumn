@@ -1,14 +1,13 @@
 module.exports = {
 	packagerConfig: {
-		name: "Autumn",
+		name: "autumn",
 		icon: "public/icon.png",
 		asar: true, // Source Code Will Be packaged in Asar file.
 		junk: true, // Don't Include Junk Files Like .DS_Store.
-		out: "build",
 		prune: true, // Doesn't Include Dev Dependencies in Build
 		win32metadata: {
-			ProductName: "Autumn",
-			CompanyName: "Autumn",
+			ProductName: "autumn",
+			CompanyName: "autumn",
 			FileDescription: "Autumn Text Editor",
 			InternalName: "Autumn Text Editor",
 			OriginalFilename: "autumn.exe"
