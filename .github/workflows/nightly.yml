@@ -1,4 +1,4 @@
-name: Continous Release Action
+name: Nightly Release Action
 on:
   push:
     branches: [ master ]
@@ -65,15 +65,15 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux_zip
-        path: ./Autumn-linux-x64.zip
+        path: ./autumn-linux-x64.zip
 
     - name: Download Windows Zip
       uses: actions/download-artifact@v2
       with:
         name: windows_zip
-        path: ./Autumn-win32-x64.zip
+        path: ./autumn-win32-x64.zip
 
-    - name: Update/Create Continous Release
+    - name: Update/Create Nightly Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -81,5 +81,5 @@ jobs:
         prerelease: false
         title: "Autumn Nightly"
         files: |
-          ./Autumn-linux-x64.zip
-          ./Autumn-win32-x64.zip
+          ./autumn-linux-x64.zip
+          ./autumn-win32-x64.zip
