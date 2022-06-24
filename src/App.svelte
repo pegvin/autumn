@@ -1,9 +1,9 @@
 <script>
 	import Mousetrap from "mousetrap";
 	import Tabs from "./components/Tabs.svelte";
+	import Welcome from "./components/Welcome.svelte";
 	import { onMount } from "svelte";
 	import { CreateEditor, SetEditorFont } from "./lib/CodeEditor.js";
-import Welcome from "./components/Welcome.svelte";
 
 	var CodeEditor;
 
@@ -91,10 +91,10 @@ import Welcome from "./components/Welcome.svelte";
 
 <style>
 	#CodeSpace {
+		--CodeEditorTabHeight: 30px;
 		position: relative;
 		color: var(--fg);
 		background-color: var(--bg);
-		--CodeEditorTabHeight: 30px;
 		display: block;
 		height: 100%;
 		width: 100%;
