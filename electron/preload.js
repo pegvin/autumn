@@ -2,13 +2,18 @@ const { contextBridge, ipcRenderer } = require('electron')
 const os = require('node:os');
 const fs = require('node:fs');
 const path = require('node:path');
+const nodeOsUtils = require('node-os-utils');
 const AutumnConfig = require('../autmun.config.js');
 
 var File = {
 	fileName: "",
 	fullPath: "",
 	contents: "",
-	isSaved: false
+	isSaved: false,
+	indent: {
+		size: 4,
+		tabs: true
+	}
 };
 
 var OpenNewFileEvt = new CustomEvent('OpenNewFileEvt', {
@@ -22,6 +27,14 @@ ipcRenderer.on('OpenNewFileEvt', (e, args) => {
 })
 
 const eApi = {
+	hardware: {
+		ramUsage: function() {
+			return nodeOsUtils.mem.info()
+		},
+		cpuUsage: function() {
+			return nodeOsUtils.cpu.usage()
+		}
+	},
 	system: {
 		arch: os.arch(),
 		platform: os.platform(),
