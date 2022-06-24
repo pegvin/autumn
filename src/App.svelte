@@ -3,7 +3,8 @@
 	import Tabs from "./components/Tabs.svelte";
 	import Welcome from "./components/Welcome.svelte";
 	import { onMount } from "svelte";
-	import { CreateEditor, SetEditorFont } from "./lib/CodeEditor.js";
+	import { CreateEditor, SetEditorFont, SetEditorMode } from "./lib/CodeEditor.js";
+	import FileTypeMap from "./lib/FileTypeMap.js";
 
 	var CodeEditor;
 
@@ -39,7 +40,7 @@
 
 		PreviousTab = CurrentTab;
 		CurrentTab = currIndex;
-		// console.log("Prev: " + PreviousTab, "\nCurr: " + CurrentTab);
+		console.log("Previous Tab: " + PreviousTab, "\nCurrent Tab: " + CurrentTab);
 
 		OpenedFiles[PreviousTab].contents = CodeEditor.getValue();
 		CodeEditor.setValue(OpenedFiles[CurrentTab].contents);
@@ -47,6 +48,7 @@
 
 	onMount(async () => {
 		console.log("App Mounted...");
+		//console.log(FileTypeMap);
 		Mousetrap.bind(['ctrl+s', 'command+s'], SaveFile);
 		Mousetrap.bind(['ctrl+w', 'command+w'], CloseFile);
 
@@ -68,6 +70,15 @@
 					return;
 				}
 			}
+
+			var fileExt = e.detail.fileName.substr(e.detail.fileName.lastIndexOf('.') + 1);
+
+			if (!fileExt || fileExt === "") {
+				fileExt = e.detail.fileName;
+			}
+
+			fileExt = fileExt.toLowerCase();
+
 			var FileContents = eApi.fs.readFile(e.detail.fullPath);
 			if (!FileContents) return;
 
@@ -77,6 +88,12 @@
 			if (OpenedFiles.length === 1) {
 				CodeEditor.setValue(FileContents);
 			}
+			FileTypeMap.forEach(FileType => {
+				if (FileType.extension.includes(fileExt) == true) {
+					console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
+					SetEditorMode(CodeEditor, FileType.cmMode);
+				}
+			})
 		})
 	});
 </script>

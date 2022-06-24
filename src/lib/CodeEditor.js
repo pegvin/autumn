@@ -1,18 +1,31 @@
-import CodeMirror from "codemirror";
-import "codemirror/mode/javascript/javascript.js"; // JavaScript
-import "codemirror/mode/coffeescript/coffeescript"; // CoffeeScript
-import "codemirror/mode/css/css"; // CSS
-import "codemirror/mode/yaml/yaml"; // Yaml
+import CodeMirror from "codemirror"; // CodeMirror Core Library
+
+import "codemirror/mode/javascript/javascript.js"; // JavaScript, TypeScript, JSON
+import "codemirror/mode/clike/clike"; // C Like - C, C++, Java, C#, Objective-C, Scala, GLSL, Squirrel, Ceylon
+import "codemirror/mode/brainfuck/brainfuck"; // BrainFuck
+import "codemirror/mode/mllike/mllike"; // ML Like - OCaml, F#
+import "codemirror/mode/pascal/pascal"; // Pascal
+import "codemirror/mode/perl/perl"; // Perl
+import "codemirror/mode/php/php"; // PHP, HTML With PHP
+import "codemirror/mode/xml/xml"; // XML, HTML
+import "codemirror/mode/css/css"; // CSS, SCSS, LESS
+import "codemirror/mode/htmlmixed/htmlmixed"; // HTML With CSS, JS
 import "codemirror/mode/go/go"; // GoLang
+import "codemirror/mode/shell/shell"; // Shell Scripts
+import "codemirror/mode/python/python"; // Python, Cython
+import "codemirror/mode/rust/rust"; // Rust
+import "codemirror/mode/jsx/jsx"; // JSX, TSX
+import "./mode/makefile.js"; // Makefile
+import "codemirror/mode/yaml/yaml"; // Yaml
+import "codemirror/mode/yaml-frontmatter/yaml-frontmatter"; // Yaml Frontmatter
 import "codemirror/mode/lua/lua"; // Lua
 import "codemirror/mode/markdown/markdown"; // Markdown
-import "codemirror/mode/python/python"; // Python
-import "codemirror/mode/rust/rust"; // Rust
-import "codemirror/mode/clike/clike"; // C, C++, C-Objective
+import "codemirror/mode/gfm/gfm"; // GitHub Flavor For Markdown
 import "codemirror/mode/dart/dart"; // Dart
-import "../../node_modules/codemirror/lib/codemirror.css";
-import "../../node_modules/codemirror/theme/base16-dark.css";
-import "../../node_modules/codemirror/theme/base16-light.css";
+
+import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
+import "../../node_modules/codemirror/theme/base16-dark.css"; // Base16 Dark
+import "../../node_modules/codemirror/theme/base16-light.css"; // Base16 Light
 
 /**
  * Creates A New CodeMirror Editor
@@ -20,7 +33,7 @@ import "../../node_modules/codemirror/theme/base16-light.css";
  * @param {String} theme String Specifying CodeMirror Theme
  * @param {Number} tabSize Tab Size
  * @param {String} mode Editor Mode
- * @returns 
+ * @returns
  */
 export function CreateEditor(
 	id, theme = "base16-dark",
