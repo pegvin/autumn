@@ -108,3 +108,19 @@ export function SetEditorMode(editor, mode) {
 	if (!editor || !mode) return;
 	editor.setOption("mode", mode);
 }
+
+/**
+ * Set Indentation Of CodeMirror Instance
+ * @param {Object} editor CodeMirror Instance
+ * @param {Number} indentSize Size Of Indent (Default 4)
+ * @param {Boolean} useTabs To Use Tabs Or Not (Default true)
+ */
+export function SetIndentationMode(editor, indentSize = 4, useTabs = true) {
+	editor.setOption("indentUnit", indentSize);
+	if (useTabs) {
+		editor.setOption("tabSize", indentSize);
+		editor.setOption("indentWithTabs", true);
+	} else {
+		editor.setOption("indentWithTabs", false);
+	}
+}
