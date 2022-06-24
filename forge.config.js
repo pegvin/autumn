@@ -8,8 +8,8 @@ module.exports = {
 		win32metadata: {
 			ProductName: "autumn",
 			CompanyName: "autumn",
-			FileDescription: "Autumn Text Editor",
-			InternalName: "Autumn Text Editor",
+			FileDescription: "A Code Editor",
+			InternalName: "autumn",
 			OriginalFilename: "autumn.exe"
 		},
 		appCategoryType: "app-category-type=public.app-category.developer-tools",
