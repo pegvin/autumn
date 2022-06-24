@@ -6,7 +6,7 @@
 	"main": "./electron/index.js",
 	"scripts": {
 		"dev": "rollup -c -w",
-		"start": "electron-forge start",
+		"start": "APP_DEV=true electron-forge start",
 		"package": "rollup -c && electron-forge package",
 		"build": "rollup -c && electron-forge make",
 		"publish": "electron-forge publish"

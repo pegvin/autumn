@@ -1,6 +1,9 @@
 const { app, BrowserWindow, Menu, dialog } = require('electron');
 const path = require('path');
 
+// APP_DEV=true electron-forge start
+const isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+
 function createWindow() {
 	const mainWindow = new BrowserWindow({
 		width: 1200,
@@ -38,7 +41,9 @@ function createWindow() {
 	Menu.setApplicationMenu(menu);
 
 	mainWindow.loadFile(path.join(__dirname, '../public/index.html'));
-	mainWindow.webContents.openDevTools();
+	if (isDev == true) {
+		mainWindow.webContents.openDevTools();
+	}
 };
 
 app.on('ready', createWindow);
