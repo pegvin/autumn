@@ -2,8 +2,10 @@
 	import Mousetrap from "mousetrap";
 	import Tabs from "./components/Tabs.svelte";
 	import Welcome from "./components/Welcome.svelte";
+	import Statusbar from "./components/Statusbar.svelte";
 	import { onMount } from "svelte";
-	import { CreateEditor, SetEditorFont, SetEditorMode } from "./lib/CodeEditor.js";
+	import { CreateEditor, SetEditorFont, SetEditorMode, SetIndentationMode } from "./lib/CodeEditor.js";
+	import DetectIndent from 'detect-indent';
 	import FileTypeMap from "./lib/FileTypeMap.js";
 
 	var CodeEditor;
@@ -84,16 +86,36 @@
 
 			OpenedFiles.push({});
 			Object.assign(OpenedFiles[OpenedFiles.length - 1], e.detail);
+
 			OpenedFiles[OpenedFiles.length - 1].contents = FileContents;
+
+			let indent = DetectIndent(FileContents);
+			if (indent.type == undefined || indent.type == "tab") {
+				OpenedFiles[OpenedFiles.length - 1].indent.size = 4;
+				OpenedFiles[OpenedFiles.length - 1].indent.tabs = true;
+			} else {
+				if (indent.type == "space") {
+					OpenedFiles[OpenedFiles.length - 1].indent.size = indent.amount;
+					OpenedFiles[OpenedFiles.length - 1].indent.tabs = false;
+				}
+			}
+
 			if (OpenedFiles.length === 1) {
 				CodeEditor.setValue(FileContents);
 			}
+
 			FileTypeMap.forEach(FileType => {
 				if (FileType.extension.includes(fileExt) == true) {
 					console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
 					SetEditorMode(CodeEditor, FileType.cmMode);
 				}
 			})
+
+			SetIndentationMode(
+				CodeEditor,
+				OpenedFiles[OpenedFiles.length - 1].indent.size,
+				OpenedFiles[OpenedFiles.length - 1].indent.tabs
+			);
 		})
 	});
 </script>
@@ -102,13 +124,22 @@
 	{#if OpenedFiles.length <= 0}
 		<Welcome />
 	{/if}
-	<Tabs items={OpenedFiles} activeTabIndex={CurrentTab} onChange={onTabChange} />
+
+	{#if OpenedFiles.length > 0}
+		<Tabs items={OpenedFiles} activeTabIndex={CurrentTab} onChange={onTabChange} />
+	{/if}
+
 	<div id="CodeEditorArea"></div>
+
+	{#if OpenedFiles.length > 0}
+		<Statusbar />
+	{/if}
 </div>
 
 <style>
 	#CodeSpace {
 		--CodeEditorTabHeight: 30px;
+		--CodeEditorSBHeight: 30px;
 		position: relative;
 		color: var(--fg);
 		background-color: var(--bg);
@@ -119,6 +150,6 @@
 
 	#CodeEditorArea {
 		width: 100%;
-		height: calc(100% - var(--CodeEditorTabHeight));
+		height: calc(100% - var(--CodeEditorTabHeight) - var(--CodeEditorSBHeight));
 	}
 </style>
