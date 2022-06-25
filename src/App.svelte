@@ -4,7 +4,7 @@
 	import Welcome from "./components/Welcome.svelte";
 	import Statusbar from "./components/Statusbar.svelte";
 	import { onMount } from "svelte";
-	import { CreateEditor, SetEditorFont, SetEditorMode, SetIndentationMode } from "./lib/CodeEditor.js";
+	import { CreateEditor, SetEditorFont, SetEditorMode, SetEditorTheme, SetIndentationMode } from "./lib/CodeEditor.js";
 	import DetectIndent from 'detect-indent';
 	import FileTypeMap from "./lib/FileTypeMap.js";
 
@@ -51,6 +51,7 @@
 	onMount(async () => {
 		console.log("App Mounted...");
 		//console.log(FileTypeMap);
+		document.addEventListener("SaveFileEvt", SaveFile);
 		Mousetrap.bind(['ctrl+s', 'command+s'], SaveFile);
 		Mousetrap.bind(['ctrl+w', 'command+w'], CloseFile);
 
@@ -64,7 +65,16 @@
 				OpenedFiles[CurrentTab].isSaved = false;
 			}
 		})
-		SetEditorFont(CodeEditor, eApi.config.Editor.FontFamily, 18);
+		if (eApi.config.Editor.Theme) {
+			SetEditorTheme(CodeEditor, eApi.config.Editor.Theme);
+		}
+		if (eApi.config.Editor.FontFamily) {
+			SetEditorFont(
+				CodeEditor,
+				eApi.config.Editor.FontFamily,
+				eApi.config.Editor.FontSize != undefined ? eApi.config.Editor.FontSize : 18
+			);
+		}
 
 		document.addEventListener("OpenNewFileEvt", (e) => {
 			for (let i = 0; i < OpenedFiles.length; i++) {

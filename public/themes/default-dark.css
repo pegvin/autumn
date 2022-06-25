@@ -1,0 +1,95 @@
+/*
+	DEFAULT DARK THEME
+*/
+
+body.default-dark {
+	--fg: #FFF;
+	--fg1: #E0E0E0;
+	--fg2: #F7F7F7;
+
+	--bg: #333;
+	--bg1: #454545;
+	--bg2: #666;
+}
+
+.cm-s-default-dark.CodeMirror { color: #FFF; background: #333; }
+.cm-s-default-dark div.CodeMirror-selected { background: #e0e0e0; }
+
+.cm-s-default-dark .CodeMirror-line::selection,
+.cm-s-default-dark .CodeMirror-line > span::selection,
+.cm-s-default-dark .CodeMirror-line > span > span::selection { background: #e0e0e0; }
+
+.cm-s-default-dark .CodeMirror-line::-moz-selection,
+.cm-s-default-dark .CodeMirror-line > span::-moz-selection,
+.cm-s-default-dark .CodeMirror-line > span > span::-moz-selection { background: #e0e0e0; }
+
+.cm-s-default-dark .CodeMirror-gutters { background: #222; border-right-color: #444; }
+.cm-s-default-dark .CodeMirror-guttermarker { color: #eb5e5f; }
+.cm-s-default-dark .CodeMirror-guttermarker-subtle { color: #b0b0b0; }
+.cm-s-default-dark .CodeMirror-linenumber { color: #b0b0b0; }
+.cm-s-default-dark .CodeMirror-cursor { border-left: 1px solid #505050; }
+
+.cm-s-default-dark span.cm-comment { color: #b0714f; }
+.cm-s-default-dark span.cm-atom { color: #ff5598; }
+.cm-s-default-dark span.cm-number { color: #8500ff; }
+.cm-s-default-dark span.cm-keyword { color: #6970c2; }
+.cm-s-default-dark span.cm-string { color: #eb944d; }
+.cm-s-default-dark span.cm-variable { color: #00aaff; }
+.cm-s-default-dark span.cm-variable-2 { color: #eb5e5f; }
+.cm-s-default-dark span.cm-def { color: #eb944d; }
+.cm-s-default-dark span.cm-bracket { color: #202020; }
+.cm-s-default-dark span.cm-tag { color: #eb5e5f; }
+.cm-s-default-dark span.cm-link { color: #ff5598; }
+.cm-s-default-dark span.cm-error { background: #eb5e5f; color: #505050; }
+
+.cm-s-default-dark span.cm-property,
+.cm-s-default-dark span.cm-attribute { color: #a0c257; }
+
+.cm-s-default-dark .CodeMirror-activeline-background { background: #DDDCDC; }
+.cm-s-default-dark .CodeMirror-matchingbracket {
+	color: #f5f5f5 !important;
+	background-color: #6970c2 !important
+}
+
+.CodeMirror-hints.default-dark {
+	position: absolute;
+	z-index: 10;
+	overflow: hidden;
+	list-style: none;
+
+	margin: 0;
+	padding: 2px;
+
+	-webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+	-moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+	box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+	border-radius: 5px;
+	border: 1px solid #333;
+
+	background: #4a4a4a;
+	font-size: 90%;
+	font-family: monospace;
+
+	max-height: 20em;
+	overflow-y: auto;
+}
+
+.CodeMirror-hint.default-dark {
+	margin: 0;
+	padding: 0 4px;
+	border-radius: 2px;
+	white-space: pre;
+	color: #FFF;
+	cursor: pointer;
+}
+
+.CodeMirror-hints.default-dark li {
+	color: #FFF;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.CodeMirror-hints.default-dark li.CodeMirror-hint-active {
+	background: #6970c2;
+	color: white;
+}

@@ -16,6 +16,8 @@ var File = {
 	}
 };
 
+var SaveFileEvt = new CustomEvent('SaveFileEvt', {});
+
 var OpenNewFileEvt = new CustomEvent('OpenNewFileEvt', {
 	detail: File
 })
@@ -24,6 +26,10 @@ ipcRenderer.on('OpenNewFileEvt', (e, args) => {
 	File.fileName = path.basename(args[0]);
 	File.fullPath = args[0];
 	document.dispatchEvent(OpenNewFileEvt);
+})
+
+ipcRenderer.on('SaveFileReq', () => {
+	document.dispatchEvent(SaveFileEvt);
 })
 
 const eApi = {

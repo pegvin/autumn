@@ -32,7 +32,17 @@ function createWindow() {
 							mainWindow.webContents.send("OpenNewFileEvt", file);
 						}
 					}
+				},
+				{
+					label: "Save",
+					click: async function() {
+						mainWindow.webContents.send("SaveFileReq", []);
+					}
 				}
+				// {
+				// 	label: "",
+				// 	click: async function() {}
+				// },
 			]
 		}
 	];

@@ -1,5 +1,23 @@
 import CodeMirror from "codemirror"; // CodeMirror Core Library
 
+// Auto Close & Match
+import "codemirror/addon/edit/closetag";
+import "codemirror/addon/edit/matchtags";
+import "codemirror/addon/edit/closebrackets";
+import "codemirror/addon/edit/matchbrackets";
+
+// Suggestions & AutoComplete
+import "codemirror/addon/hint/show-hint";
+import "codemirror/addon/hint/html-hint";
+import "codemirror/addon/hint/css-hint";
+import "codemirror/addon/hint/javascript-hint";
+import "codemirror/addon/hint/sql-hint";
+import "codemirror/addon/hint/xml-hint";
+
+// Misc Addons
+import "codemirror/addon/display/placeholder";
+import "codemirror/addon/selection/active-line";
+
 import "codemirror/mode/javascript/javascript.js"; // JavaScript, TypeScript, JSON
 import "codemirror/mode/clike/clike"; // C Like - C, C++, Java, C#, Objective-C, Scala, GLSL, Squirrel, Ceylon
 import "codemirror/mode/brainfuck/brainfuck"; // BrainFuck
@@ -24,8 +42,6 @@ import "codemirror/mode/gfm/gfm"; // GitHub Flavor For Markdown
 import "codemirror/mode/dart/dart"; // Dart
 
 import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
-import "../../node_modules/codemirror/theme/base16-dark.css"; // Base16 Dark
-import "../../node_modules/codemirror/theme/base16-light.css"; // Base16 Light
 
 /**
  * Creates A New CodeMirror Editor
@@ -48,12 +64,19 @@ export function CreateEditor(
 		indentUnit: tabSize,
 		tabSize: tabSize,
 		indentWithTabs: true,
-		value: "// Start Coding...",
+		placeholder: "your code goes here...",
 		mode: mode,
 		autofocus: true,
+		matchTags: {
+			bothTags: true
+		},
+		autoCloseTags: true,
+		autoCloseBrackets: true,
+		styleActiveLine: false,
 		extraKeys: {
 			"Ctrl-S": SaveReqCb,
-			"Ctrl-W": FileCloseReqCb
+			"Ctrl-W": FileCloseReqCb,
+			"Ctrl-Space": "autocomplete"
 		}
 	})
 
