@@ -40,6 +40,7 @@ import "codemirror/mode/lua/lua"; // Lua
 import "codemirror/mode/markdown/markdown"; // Markdown
 import "codemirror/mode/gfm/gfm"; // GitHub Flavor For Markdown
 import "codemirror/mode/dart/dart"; // Dart
+import "./mode/svelte.js"; // Svelte
 
 import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
 

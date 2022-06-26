@@ -188,6 +188,11 @@ const FileTypeMap = [
 		title: "Dart",
 		extension: ["dart"],
 		cmMode: "application/dart"
+	},
+	{
+		title: "Svelte",
+		extension: ["svelte"],
+		cmMode: "text/x-svelte"
 	}
 ];
 
