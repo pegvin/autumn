@@ -16,6 +16,7 @@
 		},
 		mode: "javascript",
 		extraKeys: {
+			"Ctrl-O": _openFile,
 			"Ctrl-S": SaveFile,
 			"Ctrl-W": CloseFile,
 			"Ctrl-N": NewFile,
@@ -27,6 +28,16 @@
 	let PrevTab = 0;
 	let Files = [];
 	$: ReRenderTabs = 0; // Change To Anything To Re-Render
+
+	// A Little Wrapper For OpenFile()
+	async function _openFile() {
+		try {
+			let filePath = await eApi.dialog.ShowOpenFileDialog();
+			OpenFile(filePath);
+		} catch(err) {
+			console.log(err)
+		}
+	}
 
 	function NewFile() {
 		console.log("Creating A New File...")
@@ -46,6 +57,48 @@
 		SetEditorActive(editor);
 		onTabChange(Files.length - 1);
 		ReRenderTabs++;
+	}
+
+	async function OpenFile(filePath) {
+		try {
+			NewFile();
+
+			let file = Files[Files.length - 1];
+			file.fileName = eApi.path.basename(filePath);
+			file.fullPath = filePath;
+
+			var fileExt = file.fileName.substr(file.fileName.lastIndexOf('.') + 1);
+
+			if (!fileExt || fileExt === "") { fileExt = file.fileName; }
+			fileExt = fileExt.toLowerCase();
+
+			var FileContents = eApi.fs.readFile(filePath);
+			if (!FileContents) return;
+
+			let detectedIndent = DetectIndent(FileContents);
+			if (detectedIndent.type == undefined || detectedIndent.type == "tab") {
+				EditorOptions.indent.size = 4;
+				EditorOptions.indent.tabs = true;
+			} else {
+				if (detectedIndent.type == "space") {
+					EditorOptions.indent.size = detectedIndent.amount;
+					EditorOptions.indent.tabs = false;
+				}
+			}
+
+			file.editor.setValue(FileContents);
+			file.editor.clearHistory();
+
+			SetIndentationMode(file.editor, file.indent.size, file.indent.tabs);
+			FileTypeMap.forEach(FileType => {
+				if (FileType.extension.includes(fileExt) == true) {
+					console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
+					SetEditorMode(file.editor, FileType.cmMode);
+				}
+			});
+		} catch(err) {
+			console.log(err);
+		}
 	}
 
 	async function CloseFile() {
@@ -97,6 +150,7 @@
 		// Add Event Listeners
 		document.addEventListener("SaveFileEvt", SaveFile);
 		Mousetrap.bind(['ctrl+s', 'command+s'], SaveFile);
+		Mousetrap.bind(['ctrl+o', 'command+o'], _openFile);
 		Mousetrap.bind(['ctrl+w', 'command+w'], CloseFile);
 		Mousetrap.bind(['ctrl+n', 'command+n'], NewFile);
 
@@ -143,44 +197,7 @@
 					return;
 				}
 			}
-
-			var fileExt = e.detail.fileName.substr(e.detail.fileName.lastIndexOf('.') + 1);
-
-			if (!fileExt || fileExt === "") {
-				fileExt = e.detail.fileName;
-			}
-
-			fileExt = fileExt.toLowerCase();
-
-			var FileContents = eApi.fs.readFile(e.detail.fullPath);
-			if (!FileContents) return;
-
-			let detectedIndent = DetectIndent(FileContents);
-			if (detectedIndent.type == undefined || detectedIndent.type == "tab") {
-				EditorOptions.indent.size = 4;
-				EditorOptions.indent.tabs = true;
-			} else {
-				if (detectedIndent.type == "space") {
-					EditorOptions.indent.size = detectedIndent.amount;
-					EditorOptions.indent.tabs = false;
-				}
-			}
-
-			NewFile();
-
-			let file = Files[Files.length - 1];
-			file.fileName = e.detail.fileName;
-			file.fullPath = e.detail.fullPath;
-			file.editor.setValue(FileContents);
-			file.editor.clearHistory();
-
-			SetIndentationMode(file.editor, file.indent.size, file.indent.tabs);
-			FileTypeMap.forEach(FileType => {
-				if (FileType.extension.includes(fileExt) == true) {
-					console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
-					SetEditorMode(file.editor, FileType.cmMode);
-				}
-			})
+			OpenFile(e.detail.fullPath)
 		})
 	});
 </script>
