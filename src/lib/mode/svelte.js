@@ -1,5 +1,6 @@
 // Original Author - Juan Gomez
 // Modified Mime & Imports.
+// https://github.com/autumn-ted/mode-svelte
 
 (function (mod) {
 	"use strict";
