@@ -14,6 +14,22 @@
 	let PreviousTab = 0;
 	let OpenedFiles = [];
 
+	function NewFile() {
+		console.log("Creating A New File...")
+		OpenedFiles.push({
+			fileName: "untitled",
+			fullPath: null,
+			contents: "",
+			isSaved: false,
+			indent: {
+				size: 4,
+				tabs: true
+			}
+		});
+
+		onTabChange(OpenedFiles.length - 1);
+	}
+
 	async function CloseFile() {
 		if (OpenedFiles.length <= 0) return;
 		if (OpenedFiles.length === 1) {
@@ -31,15 +47,23 @@
 	async function SaveFile() {
 		let fileObj = OpenedFiles[CurrentTab];
 		if (!fileObj) return;
+		if (!fileObj.fullPath) {
+			try {
+				let file = await eApi.dialog.ShowSaveFileDialog();
+				fileObj.fileName = eApi.path.basename(file);
+				fileObj.fullPath = file;
+			} catch(err) {
+				console.log(err);
+				return;
+			}
+		}
 
-		OpenedFiles[CurrentTab].contents = CodeEditor.getValue();
+		fileObj.contents = CodeEditor.getValue();
 		eApi.fs.writeFile(fileObj.fullPath, fileObj.contents);
-		OpenedFiles[CurrentTab].isSaved = true;
+		fileObj.isSaved = true;
 	}
 
 	function onTabChange(currIndex) {
-		if (CurrentTab == currIndex) return; // this event is fired even when user clicks on the already selected tab, to prevent code running twice for no reason we use this if condition.
-
 		PreviousTab = CurrentTab;
 		CurrentTab = currIndex;
 		console.log("Previous Tab: " + PreviousTab, "\nCurrent Tab: " + CurrentTab);
@@ -50,14 +74,21 @@
 
 	onMount(async () => {
 		console.log("App Mounted...");
-		//console.log(FileTypeMap);
+
 		document.addEventListener("SaveFileEvt", SaveFile);
 		Mousetrap.bind(['ctrl+s', 'command+s'], SaveFile);
 		Mousetrap.bind(['ctrl+w', 'command+w'], CloseFile);
+		Mousetrap.bind(['ctrl+n', 'command+n'], NewFile);
 
 		CodeEditor = CreateEditor(
 			"CodeEditorArea", eApi.system.isDark ? "base16-dark" : "base16-light",
-			4, "javascript", SaveFile, CloseFile
+			4, "javascript",
+			{
+				"Ctrl-S": SaveFile,
+				"Ctrl-W": CloseFile,
+				"Ctrl-N": NewFile,
+				"Ctrl-Space": "autocomplete"
+			}
 		);
 
 		CodeEditor.on("change", () => {
@@ -75,6 +106,14 @@
 				eApi.config.Editor.FontSize != undefined ? eApi.config.Editor.FontSize : 18
 			);
 		}
+
+		document.addEventListener("NewFileEvt", NewFile);
+
+		document.addEventListener("SaveFileAsEvt", (e) => {
+			OpenedFiles[CurrentTab].fullPath = e.detail.fullPath;
+			OpenedFiles[CurrentTab].fileName = e.detail.fileName;
+			SaveFile();
+		});
 
 		document.addEventListener("OpenNewFileEvt", (e) => {
 			for (let i = 0; i < OpenedFiles.length; i++) {
@@ -131,17 +170,17 @@
 </script>
 
 <div id="CodeSpace">
-	{#if OpenedFiles.length <= 0}
+	{#if OpenedFiles?.length == 0}
 		<Welcome />
 	{/if}
 
-	{#if OpenedFiles.length > 0}
+	{#if OpenedFiles?.length > 0}
 		<Tabs items={OpenedFiles} activeTabIndex={CurrentTab} onChange={onTabChange} />
 	{/if}
 
 	<div id="CodeEditorArea"></div>
 
-	{#if OpenedFiles.length > 0}
+	{#if OpenedFiles?.length > 0}
 		<Statusbar />
 	{/if}
 </div>

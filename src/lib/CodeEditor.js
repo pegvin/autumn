@@ -54,8 +54,11 @@ import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
 export function CreateEditor(
 	id, theme = "base16-dark",
 	tabSize = 4, mode = "javascript",
-	SaveReqCb = function() { console.log("Save Requested..."); },
-	FileCloseReqCb = function() { console.log("File Close Requested..."); }
+	extraKeys = {
+		"Ctrl-S": function() { console.log("Save Requested..."); },
+		"Ctrl-W": function() { console.log("File Close Requested..."); },
+		"Ctrl-Space": "autocomplete"
+	}
 ) {
 	const element = document.getElementById(id);
 	var CodeEditor = CodeMirror(element, {
@@ -73,11 +76,7 @@ export function CreateEditor(
 		autoCloseTags: true,
 		autoCloseBrackets: true,
 		styleActiveLine: false,
-		extraKeys: {
-			"Ctrl-S": SaveReqCb,
-			"Ctrl-W": FileCloseReqCb,
-			"Ctrl-Space": "autocomplete"
-		}
+		extraKeys: extraKeys
 	})
 
 	CodeEditor?.setSize("100%", "100%");

@@ -16,10 +16,13 @@ var File = {
 	}
 };
 
+var NewFileEvt = new CustomEvent('NewFileEvt', {});
 var SaveFileEvt = new CustomEvent('SaveFileEvt', {});
+var SaveFileAsEvt = new CustomEvent('SaveFileAsEvt', { detail: File });
+var OpenNewFileEvt = new CustomEvent('OpenNewFileEvt', { detail: File })
 
-var OpenNewFileEvt = new CustomEvent('OpenNewFileEvt', {
-	detail: File
+ipcRenderer.on('NewFileReq', (e, args) => {
+	document.dispatchEvent(NewFileEvt);
 })
 
 ipcRenderer.on('OpenNewFileEvt', (e, args) => {
@@ -30,6 +33,12 @@ ipcRenderer.on('OpenNewFileEvt', (e, args) => {
 
 ipcRenderer.on('SaveFileReq', () => {
 	document.dispatchEvent(SaveFileEvt);
+})
+
+ipcRenderer.on('SaveFileAsReq', (e, filePath) => {
+	File.fileName = path.basename(filePath);
+	File.fullPath = filePath;
+	document.dispatchEvent(SaveFileAsEvt);
 })
 
 const eApi = {
@@ -47,6 +56,37 @@ const eApi = {
 		isDark: window.matchMedia("(prefers-color-scheme: dark)").matches
 	},
 	config: AutumnConfig,
+	dialog: {
+		ShowSaveFileDialog: function() {
+			return new Promise((resolve, reject) => {
+				ipcRenderer.send("ShowSaveFileDialog");
+				ipcRenderer.on("ShowSaveFileDialog", (e, file) => {
+					if (file === -1) {
+						reject("Main Thread Returned -1");
+					} else {
+						resolve(file);
+					}
+				})
+			})
+		},
+		ShowOpenFileDialog: function() {
+			return new Promise((resolve, reject) => {
+				ipcRenderer.send("ShowOpenFileDialog");
+				ipcRenderer.on("ShowOpenFileDialog", (e, file) => {
+					if (file === -1) {
+						reject("Main Thread Returned -1");
+					} else {
+						resolve(file[0]);
+					}
+				})
+			})
+		}
+	},
+	path: {
+		basename: function(filePath) {
+			return path.basename(filePath);
+		}
+	},
 	fs: {
 		writeFile: function(filePath, contents) {
 			try {
