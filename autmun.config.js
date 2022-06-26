@@ -2,7 +2,7 @@ var C = {};
 C.Editor = {};
 
 C.Editor.FontFamily = "'JetBrains Mono', monospace";
-C.Editor.FontSize = 24;
+C.Editor.FontSize = 20;
 
 /*
   Options:
