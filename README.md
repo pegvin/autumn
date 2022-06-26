@@ -2,6 +2,13 @@
 A Code Editor
 
 ---
+## Features
+- :beginner: Beginner Friendly
+- :zap: Light-weight* & Fast
+- :desktop_computer: Works On Windows, Linux & Macos
+- :moneybag: Free & Open-Source
+
+---
 
 ## Screenshots
 
