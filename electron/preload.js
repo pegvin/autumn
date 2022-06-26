@@ -8,8 +8,8 @@ const AutumnConfig = require('../autmun.config.js');
 var File = {
 	fileName: "",
 	fullPath: "",
-	contents: "",
 	isSaved: false,
+	editor: null,
 	indent: {
 		size: 4,
 		tabs: true

@@ -46,29 +46,31 @@ import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
 /**
  * Creates A New CodeMirror Editor
  * @param {String} id Element ID To Put The Editor inside of.
- * @param {String} theme String Specifying CodeMirror Theme
- * @param {Number} tabSize Tab Size
- * @param {String} mode Editor Mode
+ * @param {Object} object containing editor options
  * @returns
  */
-export function CreateEditor(
-	id, theme = "base16-dark",
-	tabSize = 4, mode = "javascript",
-	extraKeys = {
-		"Ctrl-S": function() { console.log("Save Requested..."); },
-		"Ctrl-W": function() { console.log("File Close Requested..."); },
-		"Ctrl-Space": "autocomplete"
+export function CreateEditor(id, editorOpts) {
+	if (!editorOpts) {
+		editorOpts = {
+			theme: "base16-dark",
+			indent: {
+				size: 4,
+				tabs: true
+			},
+			mode: "javascript",
+			extraKeys: {}
+		}
 	}
-) {
+
 	const element = document.getElementById(id);
 	var CodeEditor = CodeMirror(element, {
 		lineNumbers: true,
-		theme: theme,
-		indentUnit: tabSize,
-		tabSize: tabSize,
-		indentWithTabs: true,
+		theme: editorOpts.theme,
+		indentUnit: editorOpts.indent.size,
+		tabSize: editorOpts.indent.size,
+		indentWithTabs: editorOpts.indent.tabs,
 		placeholder: "your code goes here...",
-		mode: mode,
+		mode: editorOpts.mode,
 		autofocus: true,
 		matchTags: {
 			bothTags: true
@@ -76,11 +78,11 @@ export function CreateEditor(
 		autoCloseTags: true,
 		autoCloseBrackets: true,
 		styleActiveLine: false,
-		extraKeys: extraKeys
+		extraKeys: editorOpts.extraKeys
 	})
 
 	CodeEditor?.setSize("100%", "100%");
-	document.body.className = theme;
+	SetEditorTheme(undefined, editorOpts.theme);
 
 	return CodeEditor;
 }
@@ -91,7 +93,7 @@ export function CreateEditor(
  * @param {String} theme Theme To Set To
  */
 export function SetEditorTheme(editor, theme) {
-	editor.setOption("theme", theme);
+	editor?.setOption("theme", theme);
 	document.body.className = theme;
 }
 
@@ -112,12 +114,28 @@ export function GetEditorTheme(editor) {
  * @returns {null}
  */
 export async function SetEditorFont(editor, fontFamily = "monospace", fontSize = 18) {
-	document.getElementById("CodeEditorArea").style.fontSize = fontSize + "px";
-	document.querySelectorAll(".CodeMirror *")?.forEach((element) => {
-		element.style.fontFamily = fontFamily;
-	});
+	let cmStyleElem = document.getElementById("CodeMirrorFontNSize")
+
+	cmStyleElem.innerText = `
+#CodeEditorArea { font-size: ${fontSize}px; }
+.CodeMirror { font-family: ${fontFamily}; }
+`;
 
 	editor?.refresh();
+}
+
+/**
+ * Set CodeMirror Instance Active
+ * @param {Object} editor CodeMirror Instance
+ * @returns {null}
+*/
+export function SetEditorActive(editor) {
+	document.querySelectorAll(".CM_ACTIVE_EDITOR").forEach(elem => {
+		elem.classList.remove("CM_ACTIVE_EDITOR");
+	})
+
+	let wrapper = editor.getWrapperElement();
+	wrapper.classList.add("CM_ACTIVE_EDITOR");
 }
 
 /**

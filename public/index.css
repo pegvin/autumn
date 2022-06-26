@@ -15,3 +15,16 @@ body {
 	height: 100vh;
 	font-family: "Open Sans", sans-serif;
 }
+
+#CodeEditorArea div.CodeMirror {
+	position: absolute;
+	top: 0; left: 0;
+}
+
+.CM_ACTIVE_EDITOR {
+	z-index: 200;
+}
+
+.CodeMirror-hints {
+	z-index: 300 !important; /* Higher Z Index Than Current Active Editor */
+}

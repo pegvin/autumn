@@ -7,6 +7,7 @@
 	var handleClick = () => {}
 
 	onMount(() => {
+		console.log("Tabs Mounted...")
 		handleClick = (currIndex) => {
 			activeTabIndex = currIndex;
 			onChange(currIndex);
