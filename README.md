@@ -1,3 +1,5 @@
+***The Project is Discontinued In favor of [Atom Editor 2](https://github.com/atomed2/atomed)***
+
 # Autumn
 A Code Editor
 
